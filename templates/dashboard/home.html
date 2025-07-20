@@ -1,0 +1,58 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Dashboard - Patch Management Service{% endblock %}
+
+{% block content %}
+    <h2>Host Overview</h2>
+    
+    {% if hosts %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Hostname</th>
+                    <th>Last Seen</th>
+                    <th>Available Updates</th>
+                    <th>Security Updates</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for host in hosts %}
+                    <tr>
+                        <td>{{ host.hostname }}</td>
+                        <td>
+                            {% if host.last_seen %}
+                                {{ host.last_seen.strftime('%Y-%m-%d %H:%M:%S') }}
+                            {% else %}
+                                Never
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if host.latest_run %}
+                                <span class="badge {% if host.latest_run.total_updates > 0 %}badge-warning{% else %}badge-primary{% endif %}">
+                                    {{ host.latest_run.total_updates }}
+                                </span>
+                            {% else %}
+                                <span class="badge badge-primary">0</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if host.latest_run and host.latest_run.security_updates > 0 %}
+                                <span class="badge badge-danger">{{ host.latest_run.security_updates }}</span>
+                            {% else %}
+                                <span class="badge badge-primary">0</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="/dashboard/host/{{ host.id }}" class="btn btn-sm">View Details</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            No hosts registered yet. <a href="/dashboard/hosts">Add a host</a> to get started.
+        </div>
+    {% endif %}
+{% endblock %}

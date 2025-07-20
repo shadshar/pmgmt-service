@@ -1,0 +1,106 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{ host.hostname }} - Patch Management Service{% endblock %}
+
+{% block content %}
+    <h2>Host Details: {{ host.hostname }}</h2>
+    
+    <div class="card">
+        <h3>Host Information</h3>
+        <table>
+            <tr>
+                <th>Hostname</th>
+                <td>{{ host.hostname }}</td>
+            </tr>
+            <tr>
+                <th>Last Seen</th>
+                <td>
+                    {% if host.last_seen %}
+                        {{ host.last_seen.strftime('%Y-%m-%d %H:%M:%S') }}
+                    {% else %}
+                        Never
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>API Key</th>
+                <td>{{ host.api_key[:8] }}...{{ host.api_key[-8:] }}</td>
+            </tr>
+        </table>
+    </div>
+    
+    {% if latest_run %}
+        <div class="card">
+            <h3>Distribution Information</h3>
+            <table>
+                <tr>
+                    <th>Distribution</th>
+                    <td>{{ latest_run.distribution_name }} ({{ latest_run.distribution_id }})</td>
+                </tr>
+                <tr>
+                    <th>Version</th>
+                    <td>{{ latest_run.distribution_version }}</td>
+                </tr>
+                <tr>
+                    <th>Package Manager</th>
+                    <td>{{ latest_run.package_manager }}</td>
+                </tr>
+                <tr>
+                    <th>Last Check</th>
+                    <td>{{ latest_run.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <h3>Available Updates ({{ latest_run.total_updates }})</h3>
+        
+        {% if packages %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Package</th>
+                        <th>Current Version</th>
+                        <th>Available Version</th>
+                        <th>Architecture</th>
+                        <th>Size</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for package in packages %}
+                        <tr>
+                            <td>
+                                {% if package.website %}
+                                    <a href="{{ package.website }}" target="_blank">{{ package.name }}</a>
+                                {% else %}
+                                    {{ package.name }}
+                                {% endif %}
+                            </td>
+                            <td>{{ package.current_version }}</td>
+                            <td>{{ package.version }}</td>
+                            <td>{{ package.architecture }}</td>
+                            <td>{{ package.size }}</td>
+                            <td>
+                                {% if package.is_security_update %}
+                                    <span class="badge badge-danger">Security</span>
+                                {% else %}
+                                    <span class="badge badge-primary">Regular</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-info">No updates available.</div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-warning">
+            No update information available for this host yet.
+        </div>
+    {% endif %}
+    
+    <p>
+        <a href="/dashboard" class="btn">Back to Dashboard</a>
+    </p>
+{% endblock %}
