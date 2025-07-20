@@ -9,8 +9,11 @@ A web-based service for collecting and displaying package update information fro
 - SQLite database for storing update information
 - Web dashboard for viewing update status across hosts
 - Host and API key management
+- Docker support for easy deployment
 
 ## Installation
+
+### Standard Installation
 
 ```bash
 # Clone the repository
@@ -29,6 +32,19 @@ source venv/bin/activate
 pip install -e .
 ```
 
+### Docker Installation
+
+The service can be easily deployed using Docker:
+
+```bash
+# Clone the repository
+git clone https://github.com/your-org/pmgmt-service.git
+cd pmgmt-service
+
+# Build and start the container
+docker-compose up -d
+```
+
 ## Configuration
 
 The service is configured using environment variables:
@@ -40,6 +56,8 @@ The service is configured using environment variables:
 
 ## Usage
 
+### Running Locally
+
 ```bash
 # Set required environment variables
 export PMGMT_USERNAME=admin
@@ -49,6 +67,48 @@ export PMGMT_PASSWORD=secure_password
 pmgmt-service
 ```
 
+### Running with Docker
+
+```bash
+# Start the service
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the service
+docker-compose down
+```
+
+When using Docker, you can modify the environment variables in the `docker-compose.yaml` file.
+
 The service will be available at:
 - Dashboard: http://localhost:3716/
 - API: http://localhost:3716/api/updates
+
+## Docker Customization
+
+You can customize the Docker deployment by modifying the `docker-compose.yaml` file:
+
+```yaml
+version: '3.8'
+
+services:
+  pmgmt-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3716:3716"  # Change the host port if needed (format: "host:container")
+    volumes:
+      - pmgmt-data:/data  # Persistent volume for the database
+    environment:
+      - PMGMT_PORT=3716
+      - PMGMT_DB_PATH=/data/pmgmt.db
+      - PMGMT_USERNAME=admin  # Change this!
+      - PMGMT_PASSWORD=changeme  # Change this!
+    restart: unless-stopped
+
+volumes:
+  pmgmt-data:
+```

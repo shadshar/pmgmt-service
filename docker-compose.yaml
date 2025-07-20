@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  pmgmt-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3716:3716"
+    volumes:
+      - pmgmt-data:/data
+    environment:
+      - PMGMT_PORT=3716
+      - PMGMT_DB_PATH=/data/pmgmt.db
+      - PMGMT_USERNAME=admin
+      - PMGMT_PASSWORD=changeme  # Change this in production!
+    restart: unless-stopped
+
+volumes:
+  pmgmt-data:
+    # This volume persists the SQLite database
