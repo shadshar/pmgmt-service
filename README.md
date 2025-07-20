@@ -2,7 +2,7 @@
 
 > [!WARNING]
 > This tool and its companion, pmgmt-agent, have been (almost) entirely vibe coded. Barely anything in either of these repos has been reviewed by a professional software developer. Do not rely on this for anything even remotely resembling production use.
-> This is a hobby project. Vibe coding this does not constitute an endorsement of Ai tools.
+> This is a hobby project. Vibe coding this does not constitute an endorsement of AI tools.
 
 A web-based service for collecting and displaying package update information from multiple hosts.
 
@@ -21,7 +21,7 @@ A web-based service for collecting and displaying package update information fro
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/pmgmt-service.git
+git clone https://github.com/shadshar/pmgmt-service.git
 cd pmgmt-service
 
 # Set up Python environment with pyenv
@@ -42,7 +42,7 @@ The service can be easily deployed using Docker:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/pmgmt-service.git
+git clone https://github.com/shadshar/pmgmt-service.git
 cd pmgmt-service
 
 # Build and start the container
