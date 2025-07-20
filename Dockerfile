@@ -12,6 +12,10 @@ RUN apt-get update && \
 RUN pip install --no-cache-dir pip==23.1.2 setuptools==68.0.0 wheel==0.40.0
 
 # Copy requirements first to leverage Docker cache
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy setup files
 COPY setup.py README.md ./
 RUN pip install --no-cache-dir -e .
 
